@@ -147,14 +147,12 @@ steps:
 - checkout: LiquidSnake
 - checkout: SearchOutlook
 
-- task: NuGetToolInstaller@0
-  displayName: Use NuGet 4.4.1
-  inputs:
-    versionSpec: 4.4.1
+steps:
+- task: NuGetToolInstaller@1
+
 - task: NuGetCommand@2
-  displayName: NuGet restore
   inputs:
-    solution: $(BuildParameters.solution)
+    restoreSolution: '$(solution)'
 
 - task: UsePythonVersion@0
   displayName: 'Use Python 3.x'
