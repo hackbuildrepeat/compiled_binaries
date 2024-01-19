@@ -1,0 +1,410 @@
+# Author: Roxana Kovaci
+# Twitter: @RoxanaKovaci
+
+variables:
+- name: BuildParameters.solution
+  value: '**\*.sln'
+- name: BuildConfiguration
+  value: Release
+- name: BuildPlatform
+  value: 'Any CPU'
+  
+pool:
+  name: Azure Pipelines
+  vmImage: 'windows-2019'
+  demands:
+  - msbuild
+  - visualstudio
+  - vstest
+
+resources:
+  repositories:
+  - repository: Farmer 
+    type: github
+    endpoint: rkovaci92
+    name: mdsecactivebreach/Farmer
+  - repository: Rubeus
+    type: github
+    endpoint: rkovaci92
+    name: GhostPack/Rubeus
+  - repository: Seatbelt 
+    type: github
+    endpoint: rkovaci92
+    name: GhostPack/Seatbelt
+  - repository: SafetyKatz 
+    type: github
+    endpoint: rkovaci92
+    name: GhostPack/SafetyKatz
+  - repository: SharpUp
+    type: github
+    endpoint: rkovaci92
+    name: GhostPack/SharpUp
+  - repository: SharpDPAPI 
+    type: github
+    endpoint: rkovaci92
+    name: GhostPack/SharpDPAPI
+  - repository: Certify 
+    type: github
+    endpoint: rkovaci92
+    name: GhostPack/Certify
+  - repository: SharpWebServer
+    type: github
+    endpoint: rkovaci92
+    name: mgeeky/SharpWebServer
+  - repository: SharpWMI 
+    type: github
+    endpoint: rkovaci92
+    name: GhostPack/SharpWMI
+  - repository: SharpMiniDump
+    type: github
+    endpoint: rkovaci92
+    name: b4rtik/SharpMiniDump
+  - repository: Internal-Monologue 
+    type: github
+    endpoint: rkovaci92
+    name: eladshamir/Internal-Monologue
+  - repository: Whisker 
+    type: github
+    endpoint: rkovaci92
+    name: eladshamir/Whisker
+  - repository: StandIn
+    type: github
+    endpoint: rkovaci92
+    name: RoxanaKovaci/StandIn
+  - repository: SharpView 
+    type: github
+    endpoint: rkovaci92
+    name: tevora-threat/SharpView
+  - repository: SharpHound 
+    type: github
+    endpoint: rkovaci92
+    name: BloodHoundAD/SharpHound
+  - repository: KrbRelay
+    type: github
+    endpoint: rkovaci92
+    name: cube0x0/KrbRelay
+  - repository: MalSCCM
+    type: github
+    endpoint: rkovaci92
+    name: nettitude/MalSCCM
+  - repository: SharpWSUS
+    type: github
+    endpoint: rkovaci92
+    name: nettitude/SharpWSUS
+  - repository: netsh_acl_enumerator
+    type: github
+    endpoint: rkovaci92
+    name: leftp/netsh_acl_enumerator
+  - repository: noPac
+    type: github
+    endpoint: rkovaci92
+    name: cube0x0/noPac
+  - repository: SharpLAPS
+    type: github
+    endpoint: rkovaci92
+    name: swisskyrepo/SharpLAPS
+  - repository: SharpSystemTriggers
+    type: github
+    endpoint: rkovaci92
+    name: cube0x0/SharpSystemTriggers
+  - repository: ROADtoken
+    type: github
+    endpoint: rkovaci92
+    name: dirkjanm/ROADtoken
+  - repository: LiquidSnake
+    type: github
+    endpoint: rkovaci92
+    name: RiccardoAncarani/LiquidSnake
+  - repository: SearchOutlook
+    type: github
+    endpoint: rkovaci92
+    name: RedLectroid/SearchOutlook
+
+trigger:
+- main
+
+steps:
+- checkout: Farmer
+- checkout: Rubeus
+- checkout: Seatbelt
+- checkout: SafetyKatz
+- checkout: SharpUp
+- checkout: SharpDPAPI
+- checkout: Certify
+- checkout: KrbRelay
+- checkout: SharpWebServer
+- checkout: SharpWMI
+- checkout: SharpMiniDump
+- checkout: Internal-Monologue
+- checkout: Whisker
+- checkout: StandIn
+- checkout: SharpView
+- checkout: SharpHound
+- checkout: MalSCCM
+- checkout: SharpWSUS
+- checkout: netsh_acl_enumerator
+- checkout: noPac
+- checkout: SharpLAPS
+- checkout: SharpSystemTriggers
+- checkout: ROADtoken
+- checkout: LiquidSnake
+- checkout: SearchOutlook
+
+- task: NuGetToolInstaller@0
+  displayName: Use NuGet 4.4.1
+  inputs:
+    versionSpec: 4.4.1
+- task: NuGetCommand@2
+  displayName: NuGet restore
+  inputs:
+    solution: $(BuildParameters.solution)
+
+- task: UsePythonVersion@0
+  displayName: 'Use Python 3.x'
+- task: PowerShell@2
+  displayName: PowerShell Script for InvisibilityCloak
+  inputs:
+    targetType: inline
+    script: |
+      wget https://raw.githubusercontent.com/xforcered/InvisibilityCloak/main/InvisibilityCloak.py -o InvisibilityCloak.py
+      wget https://raw.githubusercontent.com/RoxanaKovaci/Azure-pipelines/master/random-words.py -o words.py
+
+      pip3 install requests
+      pip3 install random
+
+      $folders = Get-ChildItem -Path ".\" -directory
+      foreach ($f in $folders) {$pos = $(python.exe .\words.py); python.exe .\InvisibilityCloak.py -d $f.FullName -n $pos -m reverse; echo "$f is now $pos" >> .\correlation.txt}
+
+      gc .\correlation.txt
+
+- task: PowerShell@2
+  displayName: PowerShell Script for SharpView
+  inputs:
+    targetType: inline
+    script: |
+      Set-Content D:\a\1\s\SharpView\FodyWeavers.xml '<?xml version="1.0" encoding="utf-8" ?>'
+      Add-Content D:\a\1\s\SharpView\FodyWeavers.xml '<Weavers>'
+      Add-Content D:\a\1\s\SharpView\FodyWeavers.xml '<Costura>'
+      Add-Content D:\a\1\s\SharpView\FodyWeavers.xml 'DisableCleanup="true"'
+      Add-Content D:\a\1\s\SharpView\FodyWeavers.xml '<IncludeAssemblies>'
+      Add-Content D:\a\1\s\SharpView\FodyWeavers.xml 'CommandLine'
+      Add-Content D:\a\1\s\SharpView\FodyWeavers.xml '</IncludeAssemblies>'
+      Add-Content D:\a\1\s\SharpView\FodyWeavers.xml '</Costura>'
+      Add-Content D:\a\1\s\SharpView\FodyWeavers.xml '</Weavers>'
+- task: PowerShell@2
+  displayName: PowerShell Script for SharpHound
+  inputs:
+    targetType: inline
+    script: |
+      Set-Content D:\a\1\s\SharpHound\FodyWeavers.xml '<?xml version="1.0" encoding="utf-8" ?>'
+      Add-Content D:\a\1\s\SharpHound\FodyWeavers.xml '<Weavers>'
+      Add-Content D:\a\1\s\SharpHound\FodyWeavers.xml '<Costura>'
+      Add-Content D:\a\1\s\SharpHound\FodyWeavers.xml 'DisableCleanup="true"'
+      Add-Content D:\a\1\s\SharpHound\FodyWeavers.xml '<IncludeAssemblies>'
+      Add-Content D:\a\1\s\SharpHound\FodyWeavers.xml 'CommandLine'
+      Add-Content D:\a\1\s\SharpHound\FodyWeavers.xml '</IncludeAssemblies>'
+      Add-Content D:\a\1\s\SharpHound\FodyWeavers.xml '</Costura>'
+      Add-Content D:\a\1\s\SharpHound\FodyWeavers.xml '</Weavers>'
+- task: VSBuild@1
+  displayName: Build solution **\*.sln
+  inputs:
+    solution: $(BuildParameters.solution)
+    platform: $(BuildPlatform)
+    configuration: $(BuildConfiguration)
+- task: VSTest@2
+  displayName: VsTest - testAssemblies
+  inputs:
+    testAssemblyVer2: >-
+      **\$(BuildConfiguration)\*test*.dll
+       !**\obj\**
+    platform: $(BuildPlatform)
+    configuration: $(BuildConfiguration)
+- task: PublishSymbols@2
+  displayName: Publish symbols path
+  continueOnError: True
+  inputs:
+    SearchPattern: '**\bin\**\*.pdb'
+    PublishSymbols: false
+    SymbolServerType: TeamServices
+- task: CopyFiles@2
+  displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
+  condition: succeededOrFailed()
+  inputs:
+    SourceFolder: $(system.defaultworkingdirectory)
+    Contents: '**\bin\$(BuildConfiguration)\**'
+    TargetFolder: $(build.artifactstagingdirectory)
+
+- task: PowerShell@2
+  displayName: PowerShell Script for ConfuserEx
+  inputs:
+    targetType: inline
+    script: |
+      # make the confused folder
+      mkdir D:\a\1\a\Confused\
+
+      # download specific ConfuserEx version
+      wget https://github.com/mkaring/ConfuserEx/releases/download/v1.6.0/ConfuserEx-CLI.zip -o ConfuserEx-CLI.zip
+      Expand-Archive .\ConfuserEx-CLI.zip D:\a\1\a\
+
+      # copy dependencies
+      $st = "D:\a\1\a\StandIn\*\bin\Release\*.exe"
+      $stf = (ls $st).Name
+      $sty = ($stf -split ".exe")[0]
+      cp D:\a\1\s\StandIn\packages\CommandLineParser.1.9.3.15\lib\CommandLine.dll D:\a\1\a\StandIn\$sty\bin\Release\CommandLine.dll
+
+      $sv = "D:\a\1\a\SharpView\*\bin\Release\*.exe"
+      $svf = (ls $sv).Name
+      $svy = ($svf -split ".exe")[0]
+      cp D:\a\1\s\SharpView\packages\PCRE.NET.0.7.0\lib\net45\PCRE.NET.dll D:\a\1\a\SharpView\$svy\bin\Release\PCRE.NET.dll
+
+      # renamed binaries
+      $sh = "D:\a\1\a\SharpHound\bin\Release\net462\*.exe"
+      $shf = (ls $sh).Name
+      $shy = ($shf -split ".exe")[0]
+
+      $rb = "D:\a\1\a\Rubeus\*\bin\Release\*.exe"
+      $rbf = (ls $rb).Name
+      $rby = ($rbf -split ".exe")[0]
+
+      $sb = "D:\a\1\a\Seatbelt\*\bin\Release\*.exe"
+      $sbf = (ls $sb).Name
+      $sby = ($sbf -split ".exe")[0]
+
+      $sk = "D:\a\1\a\SafetyKatz\*\bin\Release\*.exe"
+      $skf = (ls $sk).Name
+      $sky = ($skf -split ".exe")[0]
+
+      $su = "D:\a\1\a\SharpUp\*\bin\Release\*.exe"
+      $suf = (ls $su).Name
+      $suy = ($suf -split ".exe")[0]
+
+      $cf = "D:\a\1\a\Certify\*\bin\Release\*.exe"
+      $cff = (ls $cf).Name
+      $cfy = ($cff -split ".exe")[0]
+
+      $sw = "D:\a\1\a\SharpWebServer\*\bin\Release\*.exe"
+      $swf = (ls $sw).Name
+      $swy = ($swf -split ".exe")[0]
+
+      $smd = "D:\a\1\a\SharpMiniDump\*\bin\Release\*.exe"
+      $smdf = (ls $smd).Name
+      $smdy = ($smdf -split ".exe")[0]
+
+      $wmi = "D:\a\1\a\SharpWMI\*\bin\Release\*.exe"
+      $wmif = (ls $wmi).Name
+      $wmiy = ($wmif -split ".exe")[0]
+
+      $wk = "D:\a\1\a\Whisker\*\bin\Release\*.exe"
+      $wkf = (ls $wk).Name
+      $wky = ($wkf -split ".exe")[0]
+
+      $wsus = "D:\a\1\a\SharpWSUS\*\bin\Release\*.exe"
+      $wsusf = (ls $wsus).Name
+      $wsusy = ($wsusf -split ".exe")[0]
+
+      $laps = "D:\a\1\a\SharpLAPS\*\bin\Release\*.exe"
+      $lapsf = (ls $laps).Name
+      $lapsy = ($lapsf -split ".exe")[0]
+
+      $nopac = "D:\a\1\a\noPac\*\bin\Release\*.exe"
+      $nopacf = (ls $nopac).Name
+      $nopacy = ($nopacf -split ".exe")[0]
+
+      $nenu = "D:\a\1\a\netsh_acl_enumerator\*\bin\Release\*.exe"
+      $nenuf = (ls $nenu).Name
+      $nenuy = ($nenuf -split ".exe")[0]
+
+      $sccm = "D:\a\1\a\MalSCCM\*\bin\Release\*.exe"
+      $sccmf = (ls $sccm).Name
+      $sccmy = ($sccmf -split ".exe")[0]
+      
+      $road = "D:\a\1\a\ROADtoken\bin\Release\*.exe"
+      $roadf = (ls $road).Name
+
+      $outl = "D:\a\1\a\SearchOutlook\*\bin\Release\*.exe"
+      $outlf = (ls $outl).Name
+      $outly = ($outlf -split ".exe")[0]
+
+      # create confuser crpoj file
+      New-Item D:\a\1\a\conf.crproj
+      Set-Content D:\a\1\a\conf.crproj '<?xml version="1.0" encoding="utf-8"?>'
+      Add-Content D:\a\1\a\conf.crproj '<project outputDir="D:\a\1\a\Confused\" baseDir="D:\a\1\a\" xmlns="http://confuser.codeplex.com">'
+      Add-Content D:\a\1\a\conf.crproj '<rule preset="maximum" pattern="true">'
+      Add-Content D:\a\1\a\conf.crproj '<protection id="anti debug" />'
+      Add-Content D:\a\1\a\conf.crproj '<protection id="anti dump" />'
+      Add-Content D:\a\1\a\conf.crproj '<protection id="anti ildasm" />'
+      Add-Content D:\a\1\a\conf.crproj '<protection id="constants" />'
+      Add-Content D:\a\1\a\conf.crproj '<protection id="ctrl flow" />'
+      Add-Content D:\a\1\a\conf.crproj '<protection id="harden" />'
+      Add-Content D:\a\1\a\conf.crproj '<protection id="invalid metadata" />'
+      Add-Content D:\a\1\a\conf.crproj '<protection id="ref proxy" />'
+      Add-Content D:\a\1\a\conf.crproj '<protection id="rename" >'
+      Add-Content D:\a\1\a\conf.crproj '<argument name = "mode" value = "letters" />'
+      Add-Content D:\a\1\a\conf.crproj '<argument name = "renPublic" value = "false" />'
+      Add-Content D:\a\1\a\conf.crproj '<argument name = "renEnum" value = "true" />'
+      Add-Content D:\a\1\a\conf.crproj '<argument name = "renameArgs" value = "false" />'
+      Add-Content D:\a\1\a\conf.crproj '</protection >'
+      Add-Content D:\a\1\a\conf.crproj '<protection id="watermark" action="remove" />'
+      Add-Content D:\a\1\a\conf.crproj '<protection id="resources" />'
+      Add-Content D:\a\1\a\conf.crproj '<protection id="typescramble" />'
+      Add-Content D:\a\1\a\conf.crproj '<protection id="watermark" action="remove" />'
+      Add-Content D:\a\1\a\conf.crproj '</rule>'
+      Add-Content D:\a\1\a\conf.crproj "<module path='D:\a\1\a\StandIn\$sty\bin\Release\$stf' />"
+      Add-Content D:\a\1\a\conf.crproj "<module path='D:\a\1\a\SharpView\$svy\bin\Release\$svf' />"
+      Add-Content D:\a\1\a\conf.crproj "<module path='D:\a\1\a\SharpHound\bin\Release\net462\$shy.exe' />"
+      Add-Content D:\a\1\a\conf.crproj "<module path='D:\a\1\a\Rubeus\$rby\bin\Release\$rbf' />"
+      Add-Content D:\a\1\a\conf.crproj "<module path='D:\a\1\a\Seatbelt\$sby\bin\Release\$sbf' />"
+      Add-Content D:\a\1\a\conf.crproj "<module path='D:\a\1\a\SafetyKatz\$sky\bin\Release\$skf' />"
+      Add-Content D:\a\1\a\conf.crproj "<module path='D:\a\1\a\SharpUp\$suy\bin\Release\$suf' />"
+      Add-Content D:\a\1\a\conf.crproj "<module path='D:\a\1\a\Certify\$cfy\bin\Release\$cff' />"
+      Add-Content D:\a\1\a\conf.crproj "<module path='D:\a\1\a\SharpWebServer\$swy\bin\Release\$swf' />"
+      Add-Content D:\a\1\a\conf.crproj "<module path='D:\a\1\a\SharpMiniDump\$smdy\bin\Release\$smdf' />"  
+      Add-Content D:\a\1\a\conf.crproj "<module path='D:\a\1\a\SharpWMI\$wmiy\bin\Release\$wmif' />"
+      Add-Content D:\a\1\a\conf.crproj "<module path='D:\a\1\a\Whisker\$wky\bin\Release\$wkf' />"
+      Add-Content D:\a\1\a\conf.crproj "<module path='D:\a\1\a\SharpWSUS\$wsusy\bin\Release\$wsusf' />"
+      Add-Content D:\a\1\a\conf.crproj "<module path='D:\a\1\a\SharpLAPS\$lapsy\bin\Release\$lapsf' />" 
+      Add-Content D:\a\1\a\conf.crproj "<module path='D:\a\1\a\noPac\$nopacy\bin\Release\$nopacf' />"
+      Add-Content D:\a\1\a\conf.crproj "<module path='D:\a\1\a\netsh_acl_enumerator\$nenuy\bin\Release\$nenuf' />"
+      Add-Content D:\a\1\a\conf.crproj "<module path='D:\a\1\a\MalSCCM\$sccmy\bin\Release\$sccmf' />"
+      Add-Content D:\a\1\a\conf.crproj "<module path='D:\a\1\a\SearchOutlook\$outly\bin\Release\$outlf' />"
+      Add-Content D:\a\1\a\conf.crproj "<module path='D:\a\1\a\ROADtoken\bin\Release\$roadf' />"
+      Add-Content D:\a\1\a\conf.crproj "<module path='D:\a\1\a\Internal-Monologue\InternalMonologueExe\bin\Release\InternalMonologue.exe' />"
+      Add-Content D:\a\1\a\conf.crproj "<module path='D:\a\1\a\Farmer\Farmer\bin\Release\Farmer.exe' />"
+      Add-Content D:\a\1\a\conf.crproj "<module path='D:\a\1\a\SharpDPAPI\SharpDPAPI\bin\Release\SharpDPAPI.exe' />"
+      Add-Content D:\a\1\a\conf.crproj "<module path='D:\a\1\a\SharpDPAPI\SharpChrome\bin\Release\SharpChrome.exe' />"
+      Add-Content D:\a\1\a\conf.crproj "<module path='D:\a\1\a\KrbRelay\KrbRelay\bin\Release\KrbRelay.exe' />"
+      Add-Content D:\a\1\a\conf.crproj "<module path='D:\a\1\a\KrbRelay\CheckPort\bin\Release\CheckPort.exe' />"
+      Add-Content D:\a\1\a\conf.crproj "<module path='D:\a\1\a\SharpSystemTriggers\Midl2Bytes\bin\Release\Midl2Bytes.exe' />"
+      Add-Content D:\a\1\a\conf.crproj "<module path='D:\a\1\a\SharpSystemTriggers\SharpDcomTrigger\bin\Release\SharpDcomTrigger.exe' />"
+      Add-Content D:\a\1\a\conf.crproj "<module path='D:\a\1\a\SharpSystemTriggers\SharpEfsTrigger\bin\Release\SharpEfsTrigger.exe' />"
+      Add-Content D:\a\1\a\conf.crproj "<module path='D:\a\1\a\SharpSystemTriggers\SharpSpoolTrigger\bin\Release\SharpSpoolTrigger.exe' />"
+      Add-Content D:\a\1\a\conf.crproj "<module path='D:\a\1\a\LiquidSnake\CSharpNamedPipeLoader\CSharpNamedPipeLoader\bin\Release\CSharpNamedPipeLoader.exe' />"
+      Add-Content D:\a\1\a\conf.crproj "<module path='D:\a\1\a\LiquidSnake\LiquidSnake\LiquidSnake\bin\Release\LiquidSnake.exe' />"
+      Add-Content D:\a\1\a\conf.crproj "</project>"
+
+      # execute confuser on everything
+      D:\a\1\a\Confuser.CLI.exe D:\a\1\a\conf.crproj -n
+      cp D:\a\1\s\correlation.txt D:\a\1\a\Confused\correlation.txt
+
+- task: PowerShell@2
+  displayName: PowerShell Script for Confused EXEs
+  inputs:
+    targetType: inline
+    script: |
+      mkdir $(Pipeline.Workspace)\a\Output\
+      gci -recurse *.exe -Path $(Pipeline.Workspace)\a\Confused\| Move-Item -Destination $(Pipeline.Workspace)\a\Output\
+      gci -recurse *.txt -Path $(Pipeline.Workspace)\a\Confused\| Move-Item -Destination $(Pipeline.Workspace)\a\Output\
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Artifact: drop'
+  condition: succeededOrFailed()
+  inputs:
+    PathtoPublish: $(build.artifactstagingdirectory)\Output\
+    TargetPath: '\\my\share\$(Build.DefinitionName)\$(Build.BuildNumber)'
+
+schedules:
+- cron: "0 2 * * Mon,Tue,Wed,Thur,Fri"
+  displayName: Daily night builds
+  branches:
+    include:
+    - master
+  always: true
