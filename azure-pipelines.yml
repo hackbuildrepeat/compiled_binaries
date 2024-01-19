@@ -393,10 +393,4 @@ steps:
   condition: succeededOrFailed()
   inputs:
     PathtoPublish: $(build.artifactstagingdirectory)\Output\
-    TargetPath: '\\my\share\$(Build.DefinitionName)\$(Build.BuildNumber)'
-
-- task: PublishBuildArtifacts@1
-  inputs:
-    PathtoPublish: $(Build.ArtifactStagingDirectory)\Output\
-    ArtifactName: 'drop'
     publishLocation: 'Container'
