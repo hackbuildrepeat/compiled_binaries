@@ -1,6 +1,3 @@
-# Author: Roxana Kovaci
-# Twitter: @RoxanaKovaci
-
 variables:
 - name: BuildParameters.solution
   value: '**\*.sln'
@@ -21,103 +18,103 @@ resources:
   repositories:
   - repository: Farmer 
     type: github
-    endpoint: rkovaci92
+    endpoint: hackbuildrepeat
     name: mdsecactivebreach/Farmer
   - repository: Rubeus
     type: github
-    endpoint: rkovaci92
+    endpoint: hackbuildrepeat
     name: GhostPack/Rubeus
   - repository: Seatbelt 
     type: github
-    endpoint: rkovaci92
+    endpoint: hackbuildrepeat
     name: GhostPack/Seatbelt
   - repository: SafetyKatz 
     type: github
-    endpoint: rkovaci92
+    endpoint: hackbuildrepeat
     name: GhostPack/SafetyKatz
   - repository: SharpUp
     type: github
-    endpoint: rkovaci92
+    endpoint: hackbuildrepeat
     name: GhostPack/SharpUp
   - repository: SharpDPAPI 
     type: github
-    endpoint: rkovaci92
+    endpoint: hackbuildrepeat
     name: GhostPack/SharpDPAPI
   - repository: Certify 
     type: github
-    endpoint: rkovaci92
+    endpoint: hackbuildrepeat
     name: GhostPack/Certify
   - repository: SharpWebServer
     type: github
-    endpoint: rkovaci92
+    endpoint: hackbuildrepeat
     name: mgeeky/SharpWebServer
   - repository: SharpWMI 
     type: github
-    endpoint: rkovaci92
+    endpoint: hackbuildrepeat
     name: GhostPack/SharpWMI
   - repository: SharpMiniDump
     type: github
-    endpoint: rkovaci92
+    endpoint: hackbuildrepeat
     name: b4rtik/SharpMiniDump
   - repository: Internal-Monologue 
     type: github
-    endpoint: rkovaci92
+    endpoint: hackbuildrepeat
     name: eladshamir/Internal-Monologue
   - repository: Whisker 
     type: github
-    endpoint: rkovaci92
+    endpoint: hackbuildrepeat
     name: eladshamir/Whisker
   - repository: StandIn
     type: github
-    endpoint: rkovaci92
+    endpoint: hackbuildrepeat
     name: RoxanaKovaci/StandIn
   - repository: SharpView 
     type: github
-    endpoint: rkovaci92
+    endpoint: hackbuildrepeat
     name: tevora-threat/SharpView
   - repository: SharpHound 
     type: github
-    endpoint: rkovaci92
+    endpoint: hackbuildrepeat
     name: BloodHoundAD/SharpHound
   - repository: KrbRelay
     type: github
-    endpoint: rkovaci92
+    endpoint: hackbuildrepeat
     name: cube0x0/KrbRelay
   - repository: MalSCCM
     type: github
-    endpoint: rkovaci92
+    endpoint: hackbuildrepeat
     name: nettitude/MalSCCM
   - repository: SharpWSUS
     type: github
-    endpoint: rkovaci92
+    endpoint: hackbuildrepeat
     name: nettitude/SharpWSUS
   - repository: netsh_acl_enumerator
     type: github
-    endpoint: rkovaci92
+    endpoint: hackbuildrepeat
     name: leftp/netsh_acl_enumerator
   - repository: noPac
     type: github
-    endpoint: rkovaci92
+    endpoint: hackbuildrepeat
     name: cube0x0/noPac
   - repository: SharpLAPS
     type: github
-    endpoint: rkovaci92
+    endpoint: hackbuildrepeat
     name: swisskyrepo/SharpLAPS
   - repository: SharpSystemTriggers
     type: github
-    endpoint: rkovaci92
+    endpoint: hackbuildrepeat
     name: cube0x0/SharpSystemTriggers
   - repository: ROADtoken
     type: github
-    endpoint: rkovaci92
+    endpoint: hackbuildrepeat
     name: dirkjanm/ROADtoken
   - repository: LiquidSnake
     type: github
-    endpoint: rkovaci92
+    endpoint: hackbuildrepeat
     name: RiccardoAncarani/LiquidSnake
   - repository: SearchOutlook
     type: github
-    endpoint: rkovaci92
+    endpoint: hackbuildrepeat
     name: RedLectroid/SearchOutlook
 
 trigger:
@@ -167,7 +164,7 @@ steps:
     targetType: inline
     script: |
       wget https://raw.githubusercontent.com/xforcered/InvisibilityCloak/main/InvisibilityCloak.py -o InvisibilityCloak.py
-      wget https://raw.githubusercontent.com/RoxanaKovaci/Azure-pipelines/master/random-words.py -o words.py
+      wget https://raw.githubusercontent.com/hackbuildrepeat/compiled_binaries/master/random-words.py -o words.py
 
       pip3 install requests
       pip3 install random
