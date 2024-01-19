@@ -36,7 +36,7 @@ steps:
 
 - task: NuGetCommand@2
   inputs:
-    restoreSolution: '$(solution)'
+    restoreSolution: $(BuildParameters.solution)
 
 - task: UsePythonVersion@0
   displayName: 'Use Python 3.x'
